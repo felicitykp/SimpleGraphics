@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 public class Editor{
 	private final int width=800, height=800;
-	private String shape;
+	private String function;
 	private int x, y;
 	private JFrame frame;
 	private JPanel DrawPanel;
@@ -35,7 +35,7 @@ public class Editor{
 		RectangleButton.setPreferredSize(new Dimension (100, 30));
 		RectangleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				shape = "rectangle";
+				function = "rectangle";
 				//CODE***
 			}
 		});
@@ -44,7 +44,16 @@ public class Editor{
 		CircleButton.setPreferredSize(new Dimension (100, 30));
 		CircleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				shape = "circle";
+				function = "circle";
+				//CODE***
+			}
+		});
+		//delete button
+		JButton DeleteButton = new JButton("Delete");
+		DeleteButton.setPreferredSize(new Dimension (100, 30));
+		DeleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				function = "delete";
 				//CODE***
 			}
 		});
@@ -52,6 +61,7 @@ public class Editor{
 		JPanel ButtonPanel = new JPanel();
 		ButtonPanel.add(RectangleButton);
 		ButtonPanel.add(CircleButton);
+		ButtonPanel.add(DeleteButton);
 		ButtonPanel.setPreferredSize(new Dimension (width-50, height/11));
 		ButtonPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
 		Panel.add(ButtonPanel);
@@ -96,11 +106,18 @@ public class Editor{
 
 	public void run(){
 		//CODE***
-		if (shape == "rectangle"){
+		System.out.println(function);
+		if (function == "rectangle"){
 			Shapes.add(new Rectangle (x,y));
-		}else if (shape == "circle"){
+		}else if (function == "circle"){
 			Shapes.add(new Circle (x,y));
-		}		
+		}else if (function == "delete"){
+			for(Shape s: Shapes){
+				if(s.isOn(x, y) == true){
+					Shapes.remove(s);
+				}
+			}	
+		}
 	}
 	
 

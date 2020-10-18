@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -22,6 +23,7 @@ public class Editor{
 	private JFrame frame;
 	private JPanel DrawPanel;
 	private ArrayList<Shape> Shapes;
+	private Shape TempShape;
 	
 	public Editor(){
 		Shapes = new ArrayList<Shape>();
@@ -29,14 +31,13 @@ public class Editor{
 		JPanel Panel = new JPanel();
 		BoxLayout layout = new BoxLayout(Panel, BoxLayout.Y_AXIS);
 	
-	//BUTTON
+	//BUTTONS
 		//rectangle button
 		JButton RectangleButton = new JButton("Rectangle");
 		RectangleButton.setPreferredSize(new Dimension (100, 30));
 		RectangleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				function = "rectangle";
-				//CODE***
 			}
 		});
 		//circle button
@@ -45,7 +46,14 @@ public class Editor{
 		CircleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				function = "circle";
-				//CODE***
+			}
+		});
+		//circle button
+		JButton OvalButton = new JButton("Oval");
+		OvalButton.setPreferredSize(new Dimension (100, 30));
+		OvalButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				function = "oval";
 			}
 		});
 		//delete button
@@ -54,14 +62,32 @@ public class Editor{
 		DeleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				function = "delete";
-				//CODE***
+			}
+		});
+		//move button
+		JButton MoveButton = new JButton("Move");
+		MoveButton.setPreferredSize(new Dimension (100, 30));
+		MoveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				function = "move";
+			}
+		});
+		//move button
+		JButton ResizeButton = new JButton("Resize");
+		ResizeButton.setPreferredSize(new Dimension (100, 30));
+		ResizeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				function = "resize";
 			}
 		});
 		//button layout
 		JPanel ButtonPanel = new JPanel();
 		ButtonPanel.add(RectangleButton);
 		ButtonPanel.add(CircleButton);
+		ButtonPanel.add(OvalButton);
 		ButtonPanel.add(DeleteButton);
+		ButtonPanel.add(MoveButton);
+		ButtonPanel.add(ResizeButton);
 		ButtonPanel.setPreferredSize(new Dimension (width-50, height/11));
 		ButtonPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
 		Panel.add(ButtonPanel);
@@ -84,10 +110,55 @@ public class Editor{
 				frame.getContentPane().repaint();
 
 			}
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {
+				//make sure nothing is selected when user clicks in blank area and
+				//tries to perform move, resize functions, etc
+				TempShape = null;
+			}
 			public void mouseClicked(MouseEvent e) {}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}
+		});
+		DrawPanel.addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				//perform action only when a shape is selected
+				if(TempShape != null){
+					if (function == "rectangle"){
+						TempShape.resize(e.getX(), e.getY(), 0, 0);
+						frame.getContentPane().repaint();
+					}else if (function == "circle"){
+						TempShape.resize(e.getX(), e.getY(), 0, 0);
+						frame.getContentPane().repaint();
+					}else if (function == "oval"){
+						TempShape.resize(e.getX(), e.getY(), 0, 0);
+						frame.getContentPane().repaint();
+					}else if (function == "move"){
+						TempShape.x = e.getX();
+						TempShape.y = e.getY();
+						frame.getContentPane().repaint();
+					}else if (function == "resize"){
+						//mouse distanceX and distanceY from center when clicked
+						int OriginalDistanceX = Math.abs(x-TempShape.x);
+						int OriginalDistanceY = Math.abs(y-TempShape.y);
+						x = e.getX();
+						y = e.getY();
+						//new distanceX and distanceY from the center after dragged
+						int DraggedDistanceX = Math.abs(e.getX()-TempShape.x);
+						int DraggedDistanceY = Math.abs(e.getY()-TempShape.y);
+						//update width and height
+						TempShape.width += DraggedDistanceX-OriginalDistanceX;
+						TempShape.height += DraggedDistanceY-OriginalDistanceY;
+						frame.getContentPane().repaint();
+					}
+				}
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+			}
+			
 		});
 		Panel.add(DrawPanel);
 		
@@ -107,21 +178,43 @@ public class Editor{
 	public void run(){
 		//CODE***
 		System.out.println(function);
+		//rectangle
 		if (function == "rectangle"){
 			Shapes.add(new Rectangle (x,y));
-		}else if (function == "circle"){
+			TempShape = Shapes.get(Shapes.size()-1);
+		}
+		//circle
+		else if (function == "circle"){
 			Shapes.add(new Circle (x,y));
-		}else if (function == "delete"){
-			for(Shape s: Shapes){
+			TempShape = Shapes.get(Shapes.size()-1);
+		}
+		//oval
+		else if (function == "oval"){
+			Shapes.add(new Oval (x,y));
+			TempShape = Shapes.get(Shapes.size()-1);
+		}
+		//delete
+		else if (function == "delete"){
+			for(int i = Shapes.size(); i > 0; i--){
+				Shape s = Shapes.get(i-1);
 				if(s.isOn(x, y) == true){
 					Shapes.remove(s);
+					break;
 				}
-			}	
+			}
+		}	
+		//move, resize
+		else if (function == "move" || function == "resize"){
+			for(int i = Shapes.size(); i > 0; i--){
+				Shape s = Shapes.get(i-1);
+				if(s.isOn(x, y) == true){
+					TempShape = s;
+					break;
+				}
+			}
 		}
 	}
-	
 
-	
 	
 	
 	public static void main(String[] args){

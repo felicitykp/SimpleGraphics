@@ -2,26 +2,25 @@ package GE;
 import java.awt.Color;
 import java.awt.Graphics;
 
-class Circle extends Shape{
+class Oval extends Shape{
 	
 	private int UpperLeftX, UpperLeftY;
-	//width is set as the diameter. height is not used.
 
-	public Circle(int x, int y, int w, int h, Color c) {
+	public Oval(int x, int y, int w, int h, Color c) {
 		super(x, y, w, h, c);
-		super.type = "Circle";
+		super.type = "Oval";
 		//x and y are center coordinates
 		UpperLeftX = x-width/2;
-		UpperLeftY = y-width/2;
+		UpperLeftY = y-height/2;
 
 	}
 	
-	public Circle(int x, int y) {
-		super(x, y, 0, 0, Color.ORANGE);
-		super.type = "Circle";
+	public Oval(int x, int y) {
+		super(x, y, 0, 0, Color.green);
+		super.type = "Oval";
 		//x and y are center coordinates
 		UpperLeftX = x-width/2;
-		UpperLeftY = y-width/2;
+		UpperLeftY = y-height/2;
 	}
 
 	@Override
@@ -33,14 +32,15 @@ class Circle extends Shape{
 	@Override
 	public void draw(Graphics g) {
 		UpperLeftX = x-width/2;
-		UpperLeftY = y-width/2;
+		UpperLeftY = y-height/2;
 		g.setColor(c);
-		g.fillOval(UpperLeftX, UpperLeftY, width, width);
+		g.fillOval(UpperLeftX, UpperLeftY, width, height);
 	}
 
 	@Override
 	public boolean isOn(int mouseX, int mouseY) {
-		if(Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y)) <= width/2){
+		if( (((mouseX-x)*(mouseX-x)) / ((width/2)*(width/2))) + 
+			(((mouseY-y)*(mouseY-y)) / ((height/2)*(height/2))) <= 0.8){
 			System.out.println("true");
 			return true;
 		}
@@ -50,10 +50,10 @@ class Circle extends Shape{
 
 	@Override
 	public void resize(int x1, int y1, int x2, int y2) {
-		width = (int) (Math.sqrt((x1-x)*(x1-x)+(y1-y)*(y1-y)))*2;
+		width = Math.abs(x1-x)*2;
+		height = Math.abs(y1-y)*2;
 		UpperLeftX = x-width/2;
-		UpperLeftY = y-width/2;
-		
+		UpperLeftY = y-height/2;
 	}
 
 }

@@ -15,8 +15,8 @@ class Rectangle extends Shape {
 		UpperLeftY = y-h/2;
 	}
 	
-	public Rectangle(int x, int y) {
-		super(x, y, 0, 0, Color.blue);
+	public Rectangle(int x, int y, Color c) {
+		super(x, y, 0, 0, c);
 		super.type = "Rectangle";
 		UpperLeftX = x;
 		UpperLeftY = y;

@@ -75,7 +75,9 @@ public class SimpleArt extends JPanel  {
 		// fillRect(), not drawRect()
 		// also note that I use magic numbers here, just 
 		// because its an example - do not do this in a real project!
-		Font myFont = new Font("Skia", Font.ITALIC, 20);
+		String font = "Skia";
+		int fontsize = 20;
+		Font myFont = new Font(font, Font.ITALIC, fontsize);
 		int squarelength = 500;
 		int squareX = width/8;
 		int squareY = height/9;

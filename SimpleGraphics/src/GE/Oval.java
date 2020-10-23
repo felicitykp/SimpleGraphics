@@ -15,8 +15,8 @@ class Oval extends Shape{
 
 	}
 	
-	public Oval(int x, int y) {
-		super(x, y, 0, 0, Color.green);
+	public Oval(int x, int y, Color c) {
+		super(x, y, 0, 0, c);
 		super.type = "Oval";
 		//x and y are center coordinates
 		UpperLeftX = x-width/2;

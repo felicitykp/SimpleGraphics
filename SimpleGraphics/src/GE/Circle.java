@@ -16,8 +16,8 @@ class Circle extends Shape{
 
 	}
 	
-	public Circle(int x, int y) {
-		super(x, y, 0, 0, Color.ORANGE);
+	public Circle(int x, int y, Color c) {
+		super(x, y, 0, 0, c);
 		super.type = "Circle";
 		//x and y are center coordinates
 		UpperLeftX = x-width/2;

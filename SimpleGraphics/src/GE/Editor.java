@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,8 +25,10 @@ public class Editor{
 	private JPanel DrawPanel;
 	private ArrayList<Shape> Shapes;
 	private Shape TempShape;
+	private Color SelectedColor;
 	
 	public Editor(){
+		SelectedColor = Color.magenta;
 		Shapes = new ArrayList<Shape>();
 	//MainPanel
 		JPanel Panel = new JPanel();
@@ -72,7 +75,7 @@ public class Editor{
 				function = "move";
 			}
 		});
-		//move button
+		//resize button
 		JButton ResizeButton = new JButton("Resize");
 		ResizeButton.setPreferredSize(new Dimension (100, 30));
 		ResizeButton.addActionListener(new ActionListener() {
@@ -80,6 +83,26 @@ public class Editor{
 				function = "resize";
 			}
 		});
+		//color button
+		JButton ColorButton = new JButton("Color");
+		ColorButton.setPreferredSize(new Dimension (100, 30));
+		ColorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Choose Color");
+				JColorChooser jc = new JColorChooser();
+				SelectedColor = jc.showDialog(null, "Choose Color", Color.magenta);
+				System.out.println(SelectedColor);
+			}
+		});
+		//text button
+				JButton TextButton = new JButton("Text");
+				TextButton.setPreferredSize(new Dimension (100, 30));
+				TextButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						TempShape = new Text (SelectedColor);
+						function = "text";
+					}
+				});
 		//button layout
 		JPanel ButtonPanel = new JPanel();
 		ButtonPanel.add(RectangleButton);
@@ -88,7 +111,9 @@ public class Editor{
 		ButtonPanel.add(DeleteButton);
 		ButtonPanel.add(MoveButton);
 		ButtonPanel.add(ResizeButton);
-		ButtonPanel.setPreferredSize(new Dimension (width-50, height/11));
+		ButtonPanel.add(ColorButton);
+		ButtonPanel.add(TextButton);
+		ButtonPanel.setPreferredSize(new Dimension (width-50, 3*height/22));
 		ButtonPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
 		Panel.add(ButtonPanel);
 		
@@ -100,7 +125,7 @@ public class Editor{
 				}	
 			}
 		};
-		DrawPanel.setPreferredSize(new Dimension (width-50, 9*height/11));
+		DrawPanel.setPreferredSize(new Dimension (width-50, 17*height/22));
 		DrawPanel.setBorder(BorderFactory.createTitledBorder("Draw"));
 		DrawPanel.addMouseListener(new MouseListener() {
 			public void mousePressed(MouseEvent e) {
@@ -180,17 +205,22 @@ public class Editor{
 		System.out.println(function);
 		//rectangle
 		if (function == "rectangle"){
-			Shapes.add(new Rectangle (x,y));
+			Shapes.add(new Rectangle (x,y,SelectedColor));
 			TempShape = Shapes.get(Shapes.size()-1);
 		}
+		//text
+				else if (function == "text"){
+					Shapes.add(TempShape);
+					TempShape = Shapes.get(Shapes.size()-1);
+				}
 		//circle
 		else if (function == "circle"){
-			Shapes.add(new Circle (x,y));
+			Shapes.add(new Circle (x,y,SelectedColor));
 			TempShape = Shapes.get(Shapes.size()-1);
 		}
 		//oval
 		else if (function == "oval"){
-			Shapes.add(new Oval (x,y));
+			Shapes.add(new Oval (x,y,SelectedColor));
 			TempShape = Shapes.get(Shapes.size()-1);
 		}
 		//delete
@@ -212,7 +242,7 @@ public class Editor{
 					break;
 				}
 			}
-		}
+		}	
 	}
 
 	

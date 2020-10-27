@@ -103,6 +103,14 @@ public class Editor{
 						function = "text";
 					}
 				});
+		//line button
+		JButton LineButton = new JButton("Line");
+		LineButton.setPreferredSize(new Dimension (100, 30));
+		LineButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				function = "line";
+			}
+		});
 		//button layout
 		JPanel ButtonPanel = new JPanel();
 		ButtonPanel.add(RectangleButton);
@@ -113,6 +121,7 @@ public class Editor{
 		ButtonPanel.add(ResizeButton);
 		ButtonPanel.add(ColorButton);
 		ButtonPanel.add(TextButton);
+		ButtonPanel.add(LineButton);
 		ButtonPanel.setPreferredSize(new Dimension (width-50, 3*height/22));
 		ButtonPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
 		Panel.add(ButtonPanel);
@@ -131,7 +140,7 @@ public class Editor{
 			public void mousePressed(MouseEvent e) {
 				x = e.getX();
 				y = e.getY();
-				run();
+				MouseClickedAction();
 				frame.getContentPane().repaint();
 
 			}
@@ -157,6 +166,9 @@ public class Editor{
 						TempShape.resize(e.getX(), e.getY(), 0, 0);
 						frame.getContentPane().repaint();
 					}else if (function == "oval"){
+						TempShape.resize(e.getX(), e.getY(), 0, 0);
+						frame.getContentPane().repaint();
+					}else if (function == "line"){
 						TempShape.resize(e.getX(), e.getY(), 0, 0);
 						frame.getContentPane().repaint();
 					}else if (function == "move"){
@@ -200,7 +212,7 @@ public class Editor{
 		
 	}
 
-	public void run(){
+	public void MouseClickedAction(){
 		//CODE***
 		System.out.println(function);
 		//rectangle
@@ -209,10 +221,10 @@ public class Editor{
 			TempShape = Shapes.get(Shapes.size()-1);
 		}
 		//text
-				else if (function == "text"){
-					Shapes.add(TempShape);
-					TempShape = Shapes.get(Shapes.size()-1);
-				}
+		else if (function == "text"){
+			Shapes.add(TempShape);
+			TempShape = Shapes.get(Shapes.size()-1);
+		}
 		//circle
 		else if (function == "circle"){
 			Shapes.add(new Circle (x,y,SelectedColor));
@@ -221,6 +233,11 @@ public class Editor{
 		//oval
 		else if (function == "oval"){
 			Shapes.add(new Oval (x,y,SelectedColor));
+			TempShape = Shapes.get(Shapes.size()-1);
+		}
+		//line
+		else if (function == "line"){
+			Shapes.add(new Line (x,y,SelectedColor));
 			TempShape = Shapes.get(Shapes.size()-1);
 		}
 		//delete
@@ -242,7 +259,7 @@ public class Editor{
 					break;
 				}
 			}
-		}	
+		}
 	}
 
 	

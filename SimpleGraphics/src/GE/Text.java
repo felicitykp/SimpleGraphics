@@ -50,6 +50,7 @@ class Text extends Shape{
 		//Font size selector
 		JTextArea FontSizeSelector = new JTextArea();
 		FontSizeSelector.setPreferredSize(new Dimension(50,20));
+		FontSizeSelector.setText("10");
 		FontSizeSelector.setEditable(true);
 		FontSizeSelector.setBackground(Color.white);
 		//Confirm button (set user selected variables)
@@ -91,7 +92,7 @@ class Text extends Shape{
 		Panel.setBorder(BorderFactory.createTitledBorder("Set TextBox"));
 		//Frame setup
 		frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(FrameWidth, FrameHeight);
 		frame.add(Panel);
 		frame.setLocationRelativeTo(null);

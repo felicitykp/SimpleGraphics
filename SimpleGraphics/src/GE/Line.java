@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 class Line extends Shape {
 	
-	private int startX, startY, endX, endY;
+	public int startX, startY, endX, endY;
 	//this constructor won't not be used
 	public Line(int x, int y, int w, int h, Color c) {
 		super(x, y, w, h, c);
@@ -41,7 +41,7 @@ class Line extends Shape {
 		double slope = (double)(endY-startY)/(endX-startX);
 		if(mouseX <= (midX+(LineWidthX/2)) && mouseX >= (midX-(LineWidthX/2))){
 			if( mouseY <= (slope*(mouseX-midX)+midY+15) && mouseY >= (slope*(mouseX-midX)+midY-15)){
-				System.out.println(slope);
+				System.out.println("slope: " + -slope);
 				System.out.println("true");
 				return true;
 			}

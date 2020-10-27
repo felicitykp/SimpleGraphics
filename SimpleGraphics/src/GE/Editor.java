@@ -1,19 +1,26 @@
 package GE;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -111,6 +118,14 @@ public class Editor{
 				function = "line";
 			}
 		});
+		//save file button
+		JButton SaveButton = new JButton("Save");
+		SaveButton.setPreferredSize(new Dimension (100, 30));
+		SaveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SaveFile();
+			}
+		});
 		//button layout
 		JPanel ButtonPanel = new JPanel();
 		ButtonPanel.add(RectangleButton);
@@ -122,6 +137,7 @@ public class Editor{
 		ButtonPanel.add(ColorButton);
 		ButtonPanel.add(TextButton);
 		ButtonPanel.add(LineButton);
+		ButtonPanel.add(SaveButton);
 		ButtonPanel.setPreferredSize(new Dimension (width-50, 3*height/22));
 		ButtonPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
 		Panel.add(ButtonPanel);
@@ -140,7 +156,7 @@ public class Editor{
 			public void mousePressed(MouseEvent e) {
 				x = e.getX();
 				y = e.getY();
-				MouseClickedAction();
+				MousePressedAction();
 				frame.getContentPane().repaint();
 
 			}
@@ -172,6 +188,21 @@ public class Editor{
 						TempShape.resize(e.getX(), e.getY(), 0, 0);
 						frame.getContentPane().repaint();
 					}else if (function == "move"){
+						//different operation for line bc the line does not use x, y
+						if(TempShape.type == "Line"){
+							Line TempLine = (Line) TempShape;
+							int DraggedDistanceX = e.getX()-x;
+							int DraggedDistanceY = e.getY()-y;
+							x = e.getX();
+							y = e.getY();
+							TempLine.startX += DraggedDistanceX;
+							TempLine.endX += DraggedDistanceX;
+							TempLine.startY += DraggedDistanceY;
+							TempLine.endY += DraggedDistanceY;
+
+							
+						}
+						//operation for all other shapes, text
 						TempShape.x = e.getX();
 						TempShape.y = e.getY();
 						frame.getContentPane().repaint();
@@ -212,7 +243,7 @@ public class Editor{
 		
 	}
 
-	public void MouseClickedAction(){
+	public void MousePressedAction(){
 		//CODE***
 		System.out.println(function);
 		//rectangle
@@ -262,6 +293,24 @@ public class Editor{
 		}
 	}
 
+	public void SaveFile(){
+		JFileChooser FileChooser = new JFileChooser();
+		int i = FileChooser.showSaveDialog(null);
+		if(i==JFileChooser.APPROVE_OPTION){
+			File file = FileChooser.getSelectedFile();
+		BufferedImage image = new BufferedImage(DrawPanel.getWidth(), DrawPanel.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		DrawPanel.paint(image.getGraphics());
+		try {
+			ImageIO.write(image, "png", file.getAbsoluteFile());
+			System.out.println("Saved");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		}
+	}
 	
 	
 	public static void main(String[] args){
